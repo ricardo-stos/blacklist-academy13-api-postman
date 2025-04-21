@@ -1,0 +1,303 @@
+{
+	"id": "7b35c14e-e900-4874-854c-0e5fd51a607a",
+	"values": [
+		{
+			"key": "MsgFullNameRequerid",
+			"value": "O campo nome completo é obrigatório.",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "MsgSobreNomeRequerid",
+			"value": "Informe o nome e sobrenome com as iniciais em letra maiúscula e sem caracteres especiais.",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "MsgTokemRequerid",
+			"value": "No token provided.",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "MsgCPFCadastradoRequerid",
+			"value": "O cpf informado já existe em nossa base de dados.",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "MsgCampoSenhaObrigatorioRequerid",
+			"value": "O campo senha é obrigatório",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "MsgSenhaMinima8CaracteresRequerid",
+			"value": "Olá Ricardo GJ Santos, cadastro realizado com sucesso.",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "MsgSenhacom10DígitosRequerid",
+			"value": "Senha precisa ter: uma letra maiúscula, uma letra minúscula, um número, um caractere especial(@#$%) e tamanho entre 8-12.",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "MsgRespeitarCriticadevalor8a12CaracteresRequerid",
+			"value": "Senha precisa ter: uma letra maiúscula, uma letra minúscula, um número, um caractere especial(@#$%) e tamanho entre 8-12.",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "MsgLetrasNumeroseCaracteresEpescialRequerid",
+			"value": "Senha precisa ter: uma letra maiúscula, uma letra minúscula, um número, um caractere especial(@#$%) e tamanho entre 8-12.",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "MsgEspaçoNomeEmail",
+			"value": "O e-mail informado é inválido. Informe um e-mail no formato [nome@domínio.com].",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "MsgEspaçodominioEmail",
+			"value": "O e-mail informado é inválido. Informe um e-mail no formato [nome@domínio.com].",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "MsgEMailEmBranco",
+			"value": "O campo e-mail é obrigatório.",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "MsgEMailCadastrado",
+			"value": "E-mail já cadastrado.",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "MsgSenhaEstaCaracteresMinusculoRequerid",
+			"value": "Senha precisa ter: uma letra maiúscula, uma letra minúscula, um número, um caractere especial(@#$%) e tamanho entre 8-12.",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "MsgSenhaEstaCaracteresMaiusculosRequerid",
+			"value": "Senha precisa ter: uma letra maiúscula, uma letra minúscula, um número, um caractere especial(@#$%) e tamanho entre 8-12.",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "MsgSenhaSomenteComNumerosRequerid",
+			"value": "Senha precisa ter: uma letra maiúscula, uma letra minúscula, um número, um caractere especial(@#$%) e tamanho entre 8-12.",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "MsgEspaçoDominioEmail",
+			"value": "O e-mail informado é inválido. Informe um e-mail no formato [nome@domínio.com].",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "MsgEspaçoNomeE-mail",
+			"value": "O e-mail informado é inválido. Informe um e-mail no formato [nome@domínio.com].",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "MsgComDoisNomesRequerid",
+			"value": "Informe o nome e sobrenome com as iniciais em letra maiúscula e sem caracteres especiais.",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "MsgNomesCom100CaracteresRequerid",
+			"value": "Informe o nome e sobrenome com as iniciais em letra maiúscula e sem caracteres especiais.",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "MsgApenasSobrenomeNoCampoRequerid",
+			"value": "Informe o nome e sobrenome com as iniciais em letra maiúscula e sem caracteres especiais.",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "MsgAtualizadaSucessoRequerid",
+			"value": "Companhia atualizada com sucesso.",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "MsgNomeBrancoEmpresa",
+			"value": "O campo 'Nome da empresa' é obrigatório.",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "MsgNome100Caracteres",
+			"value": "O campo 'Nome da empresa' deve ter no máximo 100 caracteres.",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "MsgCNPJObrigatório",
+			"value": "O campo 'CNPJ' da empresa é obrigatório.",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "MsgCNPJApenasNumeros",
+			"value": "O campo 'CNPJ' da empresa deve conter apenas números.",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "MsgNãoDuplicarCNPJ",
+			"value": "O campo 'CNPJ' da empresa deve ter no máximo 14 caracteres numéricos.",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "MsgTemQueTerMascara",
+			"value": "O campo 'CNPJ' da empresa deve ter no máximo 14 caracteres numéricos.",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "MsgObrigatoriaRazãoSocial",
+			"value": "O campo 'CNPJ' da empresa deve ter no máximo 14 caracteres numéricos.",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "MsgCaracteresAlfanumericoRazãoSocial",
+			"value": "O campo 'CNPJ' da empresa deve ter no máximo 14 caracteres numéricos.",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "MsgRazãoSocialSemDuplicidade",
+			"value": "Companhia atualizada com sucesso.",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "MsgContadodoResposávelObrigatório",
+			"value": "O campo 'Contado do Responsável' é obrigatório.",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "MsgContadodoResposávelLetrasSomente",
+			"value": "O campo 'Contato do Responsável' deve ter nome e sobrenome, contendo somente letras.",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "MsgContadodoResposavelAte100Caracteres",
+			"value": "O campo 'Contado do Responsável' deve ter no máximo 100 caracteres.",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "MsgTelefoneObrigatorio",
+			"value": "O campo 'Telefone' é obrigatório.",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "MsgTelefoneSomenteNumero",
+			"value": "O campo 'Telefone' deve conter somente números.",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "MsgTelefoneSomenteNumeroBrasileiro",
+			"value": "Companhia atualizada com sucesso.",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "MsgDeveConterSomenteNúmeros",
+			"value": "O campo 'Telefone' deve conter somente números.",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "MsgTelefoneMaximo15InterPrecisa20Caracteres",
+			"value": "O campo 'Telefone' deve ter entre 13 e 14 caracteres.",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "CampoE-mailObrigatorio",
+			"value": "O campo 'Email' é obrigatório.",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "DominioValidoE-mail",
+			"value": "O campo 'Email' informado é inválido. Informe um e-mail no formato [nome@domínio.com].",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "DescriminaçaoeObrigatoria",
+			"value": "O campo 'Descrição' é obrigatório.",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "TokenExcluso",
+			"value": "No token provided.",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "EmpresaNaoAchadaExcluida",
+			"value": "Essa companhia não existem em nossa base de dados.",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "DeletadaSucessoCompanhia",
+			"value": "Companhia deletado com sucesso.",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "ErroInternoServidor",
+			"value": "CastError: Cast to ObjectId failed for value \\\"123654\\\" (type string) at path \\\"_id\\\" for model \\\"Company\\",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "MsgMínimo Duas Palavras Compostas",
+			"value": "O campo 'Contato do Responsável' deve ter nome e sobrenome, contendo somente letras.",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "MsgTelefoneSomenteNumeroEstrangeiro",
+			"value": "O campo 'Telefone' deve ter entre 13 e 14 caracteres.",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "MsgLetrasNúmeroseCaracteresEpescialRequerid",
+			"value": "Senha precisa ter: uma letra maiúscula, uma letra minúscula, um número, um caractere especial(@#$%) e tamanho entre 8-12.",
+			"type": "default",
+			"enabled": true
+		}
+	],
+	"name": "Globals",
+	"_postman_variable_scope": "globals",
+	"_postman_exported_at": "2025-04-21T19:47:21.360Z",
+	"_postman_exported_using": "Postman/11.41.7"
+}

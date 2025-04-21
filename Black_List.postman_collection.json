@@ -1,0 +1,3504 @@
+{
+	"info": {
+		"_postman_id": "f2a14905-f84b-4b25-a6f2-e59a9da4b0b8",
+		"name": "Black_List",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "41662480"
+	},
+	"item": [
+		{
+			"name": "Teste Login",
+			"item": [
+				{
+					"name": "Login Acesso",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"tokenUsers\", pm.variables.replaceIn(JSON.parse(responseBody).token));\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"mail\": \"{{EmailQaCoders}}\",\r\n    \"password\": \"{{Password}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}login/",
+							"host": [
+								"{{URL}}login"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Criação Usúario",
+			"item": [
+				{
+					"name": "Criação de Usuário com Sucesso (201)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"userId\", JSON.parse(responseBody).user._id);\r",
+									" \r",
+									" \r",
+									"pm.sendRequest({\r",
+									"    url: `${pm.environment.get(\"URL\")}/user/${pm.environment.get(\"userId\")}`,\r",
+									"    method: 'GET',\r",
+									"    header: {\r",
+									"        \"Authorization\": `${pm.environment.get(\"tokenUsers\")}`\r",
+									"    }\r",
+									"}, function (err, response) {\r",
+									"    try {\r",
+									"        pm.expect(response.json()).exist;\r",
+									"        testResult = true;\r",
+									"    } catch(error) {\r",
+									"        testResult = false;\r",
+									"        pm.test(\"Create user\", function () {\r",
+									"            pm.expect(true).to.eql(testResult);\r",
+									"        });\r",
+									"    }\r",
+									"    if (testResult !== false) {\r",
+									"        pm.test(\"User created and saved in the database.\", function () {\r",
+									"            pm.expect(pm.environment.get(\"userId\")).to.eql(response.json()._id);\r",
+									"        });\r",
+									"        pm.test(\"Status fullName is true\", function () {\r",
+									"            pm.expect(pm.environment.get(\"FullName\")).to.eql(response.json().fullName);\r",
+									"        });\r",
+									"        pm.test(\"Status email is true\", function () {\r",
+									"            pm.expect(pm.environment.get(\"Mail\")).to.eql(response.json().mail);\r",
+									"        });\r",
+									"        pm.test(\"Status cpf is true\", function () {\r",
+									"            pm.expect(pm.environment.get(\"CPF\")).to.eql(response.json().cpf);\r",
+									"        });\r",
+									"        pm.test(\"Status code is 201\", function () {\r",
+									"            pm.response.to.have.status(201);\r",
+									"        });\r",
+									"\r",
+									"    }\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"function firstName () {\r",
+									" \r",
+									"    let firstName = [\"Anderson\", \"Maria\", \"Paulo\", \"Joao\", \"Helena\", \"Elisa\", \"Denilson\", \"Flavia\", \"Silvio\", \"Margarida\", \"Joana\", \"Thiago\", \"Ana\", \"Patricia\", \"Lucas\", \"Caio\", \"Lurdes\", \"Cecilia\", \"Michael\"]\r",
+									" \r",
+									"    let randomItem = firstName[Math.floor(Math.random() * firstName.length)];\r",
+									"    return randomItem\r",
+									"}\r",
+									" \r",
+									"pm.environment.set(\"FirstName\", firstName());\r",
+									" \r",
+									" \r",
+									"function lastName () {\r",
+									" \r",
+									"    let lastName = [\"Alves Almeida\", \"Silva Santos\", \"Ferreia Silva\", \"Lousada Andrade\", \"Pereira Souza\", \"Francisco Francelino\", \"Miranda Oliveira\", \"Martins Leiria\", \"Moureira Ruiz\", \"Florencio Filho\", \"Guimarães França\", \"Loureira\", \"Caetano Lima\", \"Moura\", \"Freitas\", \"Jardins\", \"Alpes\", \"Jackson Dias\"]\r",
+									" \r",
+									"    let randomItem = lastName[Math.floor(Math.random() * lastName.length)];\r",
+									"    return randomItem\r",
+									"}\r",
+									" \r",
+									"pm.environment.set(\"LastName\", lastName());\r",
+									" \r",
+									"pm.environment.set(\"FullName\", pm.environment.get(\"FirstName\") + \" \" + pm.environment.get(\"LastName\"));\r",
+									" \r",
+									"function providerMail () {\r",
+									" \r",
+									"    let providerMail = [\"@yahoo.com.br\", \"@gmail.com\", \"@bol.com\", \"@aol.com.br\", \"@ig.com.br\", \"@outlook.com\", \"@hotmail.com\"]\r",
+									" \r",
+									"    let randomItem = providerMail[Math.floor(Math.random() * providerMail.length)];\r",
+									"    return randomItem\r",
+									"}\r",
+									" \r",
+									"pm.environment.set(\"ProviderMail\", providerMail());\r",
+									" \r",
+									"pm.environment.set(\"Mail\", pm.environment.get(\"FirstName\") + \"_\" + pm.variables.replaceIn('{{$guid}}') + pm.environment.get (\"ProviderMail\"))\r",
+									" \r",
+									" \r",
+									" \r",
+									"function generateCPF() {\r",
+									"    let num = Math.floor(Math.random() * 999999999);\r",
+									"    let cpf = num.toString().padStart(9, '0');\r",
+									"    cpf += calcularDigito(cpf);\r",
+									"    cpf += calcularDigito(cpf);\r",
+									"    return cpf;\r",
+									"}\r",
+									"function calcularDigito(cpf) {\r",
+									"    let soma = 0;\r",
+									"    for (let i = 0; i < cpf.length; i++) {\r",
+									"        soma += parseInt(cpf[i]) * ((cpf.length + 1) - i);\r",
+									"    }\r",
+									"    let resto = (soma * 10) % 11;\r",
+									"    return (resto > 9) ? '0' : resto.toString();\r",
+									"}\r",
+									"// Definir a variável no Postman\r",
+									"pm.environment.set(\"CPF\", generateCPF());"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{tokenUsers}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fullName\": \"{{FullName}}\",\r\n    \"mail\": \"{{Mail}}\",\r\n    \"accessProfile\": \"ADMIN\",\r\n    \"cpf\": \"{{CPF}}\",\r\n    \"password\": \"{{Password}}\",\r\n    \"confirmPassword\": \"{{Password}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}user/",
+							"host": [
+								"{{URL}}user"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Testes de Usuários",
+			"item": [
+				{
+					"name": "Teste - Nome Branco (400)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check msg: O campo nome completo é obrigatório.\", function () {\r",
+									"    pm.expect(pm.globals.get(\"MsgFullNameRequerid\")).to.eql(JSON.parse(responseBody).error[0]);\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{tokenUsers}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fullName\": \"\",\r\n    \"mail\": \"ricardo.stos@testes.com.br\",\r\n    \"accessProfile\": \"ADMIN\",\r\n    \"cpf\": \"23454779299\",\r\n    \"password\": \"{{Password}}\",\r\n    \"confirmPassword\": \"{{Password}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}user/",
+							"host": [
+								"{{URL}}user"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Teste - Com Dois Nomes",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check msg:Campos Incluso Dois Nomes.\", function () {\r",
+									"    pm.expect(pm.globals.get(\"MsgComDoisNomesRequerid\")).to.eql(JSON.parse(responseBody).error [0]);\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{tokenUsers}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fullName\": \"Ricardo Enzo \",\r\n    \"mail\": \"ricardo.kuzo@testes.com.br\",\r\n    \"accessProfile\": \"ADMIN\",\r\n    \"cpf\": \"32132327886\",\r\n    \"password\": \"2345@Test\",\r\n    \"confirmPassword\": \"2345@Test\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}user/",
+							"host": [
+								"{{URL}}user"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Teste - Nome Com 100 Caracteres (400)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check msg:Nomes 100 Caracteres.\", function () {\r",
+									"    pm.expect(pm.globals.get(\"MsgNomesCom100CaracteresRequerid\")).to.eql(JSON.parse(responseBody).error [0]);\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{tokenUsers}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fullName\": \"João Pedro Almeida Xavier da Silva Santos Rodrigues Ferreira Oliveira Pereira Gonçalves Mendes Costa Barbosa Cavalcanti \",\r\n    \"mail\": \"ricardo.kijzo@testes.com.br\",\r\n    \"accessProfile\": \"ADMIN\",\r\n    \"cpf\": \"85698547125\",\r\n    \"password\": \"2345@Test\",\r\n    \"confirmPassword\": \"2345@Test\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}user/",
+							"host": [
+								"{{URL}}user"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Teste - Nome  - Apenas Sobrenomes (400)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check msg:Apenas Sobrenome Campo.\", function () {\r",
+									"    pm.expect(pm.globals.get(\"MsgApenasSobrenomeNoCampoRequerid\")).to.eql(JSON.parse(responseBody).error [0]);\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{tokenUsers}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fullName\": \"Jesus Santos e Silva \",\r\n    \"mail\": \"ricardo.kgjzo@testes.com.br\",\r\n    \"accessProfile\": \"ADMIN\",\r\n    \"cpf\": \"65231458796\",\r\n    \"password\": \"3456@Test\",\r\n    \"confirmPassword\": \"3456@Test\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}user/",
+							"host": [
+								"{{URL}}user"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Teste - Nome Sem Sobrenome. (400)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check msg: Novo nome tem que ter sobrenome obrigatório.\", function () {\r",
+									"    pm.expect(pm.globals.get(\"MsgSobreNomeRequerid\")).to.eql(JSON.parse(responseBody).error[0]);\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "value",
+									"value": "{{tokenUsers}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fullName\": \"Ricardo\",\r\n    \"mail\": \"ricardo.stos@testes.com.br\",\r\n    \"accessProfile\": \"ADMIN\",\r\n    \"cpf\": \"23454779299\",\r\n    \"password\": \"{{Password}}\",\r\n    \"confirmPassword\": \"{{Password}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}user/",
+							"host": [
+								"{{URL}}user"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Teste - Sem Token  (403)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {\r",
+									"    pm.response.to.have.status(403);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check msg: Tokem obrigatório.\", function () {\r",
+									"    pm.expect(pm.globals.get(\"MsgTokemRequerid\")).to.eql(JSON.parse(responseBody).errors[0]);\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fullName\": \"Ricardo\",\r\n    \"mail\": \"ricardo.stos@testes.com.br\",\r\n    \"accessProfile\": \"ADMIN\",\r\n    \"cpf\": \"23454779299\",\r\n    \"password\": \"{{Password}}\",\r\n    \"confirmPassword\": \"{{Password}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}user/",
+							"host": [
+								"{{URL}}user"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Teste - Conflito de CPF  (409)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 409\", function () {\r",
+									"    pm.response.to.have.status(409);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check msg:CPF já cadastrado.\", function () {\r",
+									"    pm.expect(pm.globals.get(\"MsgCPFCadastradoRequerid\")).to.eql(JSON.parse(responseBody).alert[0]);\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{tokenUsers}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fullName\": \"Ricardo Santos\",\r\n    \"mail\": \"ricardo.gstos@testes.com.br\",\r\n    \"accessProfile\": \"ADMIN\",\r\n    \"cpf\": \"23454779299\",\r\n    \"password\": \"{{Password}}\",\r\n    \"confirmPassword\": \"{{Password}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}user/",
+							"host": [
+								"{{URL}}user"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Teste - (Senha) - Campo e Senha Obrigatório (400)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check msg:O campo senha e obrigatorio.\", function () {\r",
+									"    pm.expect(pm.globals.get(\"MsgCampoSenhaObrigatórioRequerid\")).to.eql(JSON.parse(responseBody).msg);\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{tokenUsers}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fullName\": \"Ricardo GJ Santos\",\r\n    \"mail\": \"ricardo.jgstos@testes.com.br\",\r\n    \"accessProfile\": \"ADMIN\",\r\n    \"cpf\": \"23454579299\",\r\n    \"password\": \"\",\r\n    \"confirmPassword\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}user/",
+							"host": [
+								"{{URL}}user"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Teste - Senha Minímo 8 Caracteres (201)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check msg:Senha Minímo 8 Caractares.\", function () {\r",
+									"    pm.expect(pm.globals.get(\"MsgSenhaMiníma8CaracteresRequerid\")).to.eql(JSON.parse(responseBody).msg,[0]);\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{tokenUsers}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fullName\": \"Ricardo GJ Santos\",\r\n    \"mail\": \"ricardojihs@testes.com.br\",\r\n    \"accessProfile\": \"ADMIN\",\r\n    \"cpf\": \"24142238233\",\r\n    \"password\": \"$%#&¨#@*&\",\r\n    \"confirmPassword\": \"$%#&¨#@*&\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}user/",
+							"host": [
+								"{{URL}}user"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Teste - Senha Acima 12 Caracteres (400)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check msg:Senha Acima 12 Caractares.\", function () {\r",
+									"    pm.expect(pm.globals.get(\"MsgSenhaAcima12CaracteresRequerid\")).to.eql(JSON.parse(responseBody).msg,[0]);\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{tokenUsers}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fullName\": \"Ricardo GJ Santos\",\r\n    \"mail\": \"ricardojgs@testes.com.br\",\r\n    \"accessProfile\": \"ADMIN\",\r\n    \"cpf\": \"125243673209\",\r\n    \"password\": \"TEsts1234@123\",\r\n    \"confirmPassword\": \"TEsts1234@123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}user/",
+							"host": [
+								"{{URL}}user"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Teste - Senha Com Caracteres Minúsculo (400)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check msg:Senha Caracteres Minusculo.\", function () {\r",
+									"    pm.expect(pm.globals.get(\"MsgSenhaEstaCaracteresMinusculoRequerid\")).to.eql(JSON.parse(responseBody).error [0]);\r",
+									"    })\r",
+									"\r",
+									"    "
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{tokenUsers}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fullName\": \"Ricardo GLEJ Santos\",\r\n    \"mail\": \"ricardoijh@testes.com.br\",\r\n    \"accessProfile\": \"ADMIN\",\r\n    \"cpf\": \"12524367320\",\r\n    \"password\": \"testes@admi21\",\r\n    \"confirmPassword\": \"testes@admi21\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}user/",
+							"host": [
+								"{{URL}}user"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Teste - Senha Com Caracteres Maiúsculo (400)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check msg:Maiusculo Caractares Senha .\", function () {\r",
+									"    pm.expect(pm.globals.get(\"MsgSenhaEstaCaracteresMaiusculosRequerid\")).to.eql(JSON.parse(responseBody).error [0]);\r",
+									"    })\r",
+									"\r",
+									"    "
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{tokenUsers}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fullName\": \"Gabriel JD Santos\",\r\n    \"mail\": \"ricardo.658@testes.com.br\",\r\n    \"accessProfile\": \"ADMIN\",\r\n    \"cpf\": \"12332365693\",\r\n    \"password\": \"ADMIN@TESTES3\",\r\n    \"confirmPassword\": \"ADMIN@TESTES3\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}user/",
+							"host": [
+								"{{URL}}user"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Teste - Senha Somente Números (400)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check msg:Senha Somente Caracteres de Numeros.\", function () {\r",
+									"    pm.expect(pm.globals.get(\"MsgSenhaSomenteComNumerosRequerid\")).to.eql(JSON.parse(responseBody).error [0]);\r",
+									"    })\r",
+									"\r",
+									"    "
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{tokenUsers}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fullName\": \"Gabriel JDE Santos\",\r\n    \"mail\": \"ricardo.658@testes.com.br\",\r\n    \"accessProfile\": \"ADMIN\",\r\n    \"cpf\": \"12388365693\",\r\n    \"password\": \"586321548932\",\r\n    \"confirmPassword\": \"586321548932\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}user/",
+							"host": [
+								"{{URL}}user"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Teste - Senha Respeitar a Criticidade 8 a 12 Caracteres (400)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check msg:Senha Com 10 Dígitos.\", function () {\r",
+									"    pm.expect(pm.globals.get(\"MsgSenhacom10DígitosRequerid\")).to.eql(JSON.parse(responseBody).error [0]);\r",
+									"    })\r",
+									"\r",
+									"    "
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{tokenUsers}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fullName\": \"Ricardo Jesus Santos\",\r\n    \"mail\": \"ricardot7s@testes.com.br\",\r\n    \"accessProfile\": \"ADMIN\",\r\n    \"cpf\": \"12524579206\",\r\n    \"password\": \"Testes@123 \",\r\n    \"confirmPassword\": \"Testes@123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}user/",
+							"host": [
+								"{{URL}}user"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Teste - Senha Fora do Padrão  (400)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check msg:Senha Com Caractere especial(@#$%),Maiúscula,Minúscula e um número.\", function () {\r",
+									"    pm.expect(pm.globals.get(\"MsgLetrasNúmeroseCaracteresEpescialRequerid\")).to.eql(JSON.parse(responseBody).error [0]);\r",
+									"    })"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{tokenUsers}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fullName\": \"Ricardo JG Santos\",\r\n    \"mail\": \"ricardojkk@testes.com.br\",\r\n    \"accessProfile\": \"ADMIN\",\r\n    \"cpf\": \"12524578200\",\r\n    \"password\": \"Admin@testes23\",\r\n    \"confirmPassword\": \"Admin@testes23\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}user/",
+							"host": [
+								"{{URL}}user"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Teste - Senha Conter Caractere Esp.|Maiúsc.|Minúsc. e Números (400)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check msg:Senha Com Caractere especial(@#$%),Maiúscula,Minúscula e um número.\", function () {\r",
+									"    pm.expect(pm.globals.get(\"MsgLetrasNúmeroseCaracteresEpescialRequerid\")).to.eql(JSON.parse(responseBody).error [0]);\r",
+									"    })"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{tokenUsers}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fullName\": \"Ricardo GJ Santos\",\r\n    \"mail\": \"ricardojgs@testes.com.br\",\r\n    \"accessProfile\": \"ADMIN\",\r\n    \"cpf\": \"12524578289\",\r\n    \"password\": \"Admin@testes26\",\r\n    \"confirmPassword\": \"Admin@testes26\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}user/",
+							"host": [
+								"{{URL}}user"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Teste - E-mail em Branco (400)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check msg:Necessario colocar email.\", function () {\r",
+									"    pm.expect(pm.globals.get(\"MsgEMailEmBranco\")).to.eql(JSON.parse(responseBody).error [0]);\r",
+									"    \r",
+									"  })\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{tokenUsers}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fullName\": \"Ricardo Moises Santos\",\r\n    \"mail\": \"\",\r\n    \"accessProfile\": \"ADMIN\",\r\n    \"cpf\": \"12524578990\",\r\n    \"password\": \"Admin@test23\",\r\n    \"confirmPassword\": \"Admin@test23\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}user/",
+							"host": [
+								"{{URL}}user"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Teste - E-mail já Cadastrado (409)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 409\", function () {\r",
+									"    pm.response.to.have.status(409);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check msg:Email Cadastrado.\", function () {\r",
+									"    pm.expect(pm.globals.get(\"MsgEMailCadastrado\")).to.eql(JSON.parse(responseBody).alert [0]);\r",
+									"    \r",
+									"  })\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{tokenUsers}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fullName\": \"Ricardo JJT Santos\",\r\n    \"mail\": \"ricardolts@testes.com.br\",\r\n    \"accessProfile\": \"ADMIN\",\r\n    \"cpf\": \"12724238925\",\r\n    \"password\": \"Admin@test02\",\r\n    \"confirmPassword\": \"Admin@test02\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}user/",
+							"host": [
+								"{{URL}}user"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Teste - E-mail com Espaço Nome (400)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check msg:Com espaço no nome e-mail.\", function () {\r",
+									"    pm.expect(pm.globals.get(\"MsgEspaçoNomeE-mail\")).to.eql(JSON.parse(responseBody).error [0]);\r",
+									"\r",
+									"    })\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{tokenUsers}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fullName\": \"Ricardo EGJ Santos\",\r\n    \"mail\": \"ric ardo.stos@testes.com.br\",\r\n    \"accessProfile\": \"ADMIN\",\r\n    \"cpf\": \"12524575689\",\r\n    \"password\": \"Admin@t132\",\r\n    \"confirmPassword\": \"Admin@tet132\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}user/",
+							"host": [
+								"{{URL}}user"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Teste - E-mail com Espaço Dominio (400)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check msg:Email Espaço Dominio.\", function () {\r",
+									"    pm.expect(pm.globals.get(\"MsgEspaçoDominioEmail\")).to.eql(JSON.parse(responseBody).error [0]);\r",
+									"\r",
+									"    })"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{tokenUsers}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fullName\": \"Ricardo EGJ Santos\",\r\n    \"mail\": \"ricardokgstos@testes.  com. \",\r\n    \"accessProfile\": \"ADMIN\",\r\n    \"cpf\": \"12524575689\",\r\n    \"password\": \"Admin@t134\",\r\n    \"confirmPassword\": \"Admin@tet134\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}user/",
+							"host": [
+								"{{URL}}user"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Testes de Criação Empresa",
+			"item": [
+				{
+					"name": "Criação Empresa- (201) Feliz",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"function firstNameCompany() {\r",
+									"    let firstNameCompany = [\"Meta\", \"Edge\", \"Indereçar\", \"Rapidex\", \"NidoTech\", \"Martins\", \"Lebara\", \"Juntex\", \"Stifler\", \"JJJ\", \"Spinafrex\", \"Ternuras\", \"Ajax\", \"Eletrec\", \"Marmitasx\", \"Coiote\", \"Leirtur\", \"Pirilampo\", \"Molex\"];\r",
+									"    let randomItem = firstNameCompany[Math.floor(Math.random() * firstNameCompany.length)];\r",
+									"    return randomItem;\r",
+									"}\r",
+									" \r",
+									"// Gerar o primeiro nome da empresa\r",
+									"let firstName = firstNameCompany();\r",
+									" \r",
+									"// Definir o primeiro nome da empresa e o segundo nome da empresa no ambiente\r",
+									"pm.environment.set(\"FirstNameCompany\", firstName);\r",
+									" \r",
+									"function secondNameCompany() {\r",
+									"    let secondNameCompany = [\"Industrias Lda.\", \"Labs EIRELE\", \"Mecatronica S.A.\", \"Multimidia & Cia.\", \"Technologies & Cia.\", \"Ventures Ltda.\", \"Horizon Ltda.\", \"Efect S.A.\", \"Forbbiden EIRELE\", \"Filter Ltda.\", \"Winning Lda.\", \"Alundra S.A.\", \"Metalomecânica Lda.\", \"FullMetal S.A.\", \"Front Lda.\", \"Back Ltda.\", \"JoyDivision S.A.\", \"Trygon Ltda.\"];\r",
+									"    let randomItem = secondNameCompany[Math.floor(Math.random() * secondNameCompany.length)];\r",
+									"    return randomItem;\r",
+									"}\r",
+									" \r",
+									"// Gerar o segundo nome da empresa\r",
+									"let secondName = secondNameCompany();\r",
+									" \r",
+									"// Definir o segundo nome da empresa no ambiente\r",
+									"pm.environment.set(\"SecondNameCompany\", secondName);\r",
+									" \r",
+									"// Definir o nome completo da empresa no ambiente\r",
+									"pm.environment.set(\"FullNameCompany\", firstName + \" \" + secondName);\r",
+									" \r",
+									"// Definir o provedor de e-mail com base no primeiro nome da empresa\r",
+									"pm.environment.set(\"ProviderMail\", \"@\" + firstName.toLowerCase().replace(/\\s/g, \"\") + \".com\");\r",
+									" \r",
+									"// Gerar e definir o e-mail no ambiente\r",
+									"let mail = firstName.toLowerCase().replace(/\\s/g, \"\") + \"_\" + pm.variables.replaceIn('{{$guid}}') + pm.environment.get(\"ProviderMail\");\r",
+									"pm.environment.set(\"CompanyMail\", mail);\r",
+									" \r",
+									" \r",
+									"function generateCNPJ() {\r",
+									"    // Gera 8 dígitos aleatórios para o CNPJ\r",
+									"    let base = '';\r",
+									"    for (let i = 0; i < 8; i++) {\r",
+									"        base += Math.floor(Math.random() * 10);\r",
+									"    }\r",
+									" \r",
+									"    // Define os nove primeiros dígitos do CNPJ\r",
+									"    let cnpj = base + '0001';\r",
+									" \r",
+									"    // Calcula o primeiro dígito verificador\r",
+									"    let dv1 = calcularPrimeiroDigitoVerificador(cnpj);\r",
+									" \r",
+									"    // Calcula o segundo dígito verificador\r",
+									"    let dv2 = calcularSegundoDigitoVerificador(cnpj + dv1);\r",
+									" \r",
+									"    // Formata o CNPJ\r",
+									"    let formattedCNPJ = `${cnpj}${dv1}${dv2}`;\r",
+									" \r",
+									"    return formattedCNPJ;\r",
+									"}\r",
+									" \r",
+									"function calcularPrimeiroDigitoVerificador(cnpj) {\r",
+									"    const pesos = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];\r",
+									"    let soma = 0;\r",
+									"    for (let i = 0; i < cnpj.length; i++) {\r",
+									"        soma += parseInt(cnpj[i]) * pesos[i];\r",
+									"    }\r",
+									"    let resto = soma % 11;\r",
+									"    return resto < 2 ? '0' : (11 - resto).toString();\r",
+									"}\r",
+									" \r",
+									"function calcularSegundoDigitoVerificador(cnpj) {\r",
+									"    const pesos = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];\r",
+									"    let soma = 0;\r",
+									"    for (let i = 0; i < cnpj.length; i++) {\r",
+									"        soma += parseInt(cnpj[i]) * pesos[i];\r",
+									"    }\r",
+									"    let resto = soma % 11;\r",
+									"    return resto < 2 ? '0' : (11 - resto).toString();\r",
+									"}\r",
+									" \r",
+									"// Gerar CNPJ único\r",
+									"let cnpj = generateCNPJ();\r",
+									"console.log(\"CNPJ único gerado:\", cnpj);\r",
+									" \r",
+									"pm.environment.set(\"CNPJ\", cnpj);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{tokenUsers}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"corporateName\": \"{{FullNameCompany}}\",\r\n  \"registerCompany\": \"{{CNPJ}}\",\r\n  \"mail\": \"test@test.com\",\r\n  \"matriz\": \"Teste\",\r\n  \"responsibleContact\": \"Marcio Santos\",\r\n  \"telephone\": \"99999999999999\",\r\n  \"serviceDescription\": \"Testes\",\r\n  \"address\": [\r\n    {\r\n      \"zipCode\": \"04777001\",\r\n      \"city\": \"São Paulo\",\r\n      \"state\": \"SP\",\r\n      \"district\": \"Rua das Flores\",\r\n      \"street\": \"Avenida Interlagos\",\r\n      \"number\": \"5021458745\",\r\n      \"complement\": \"de 4503 ao fim - lado ímpar\",\r\n      \"country\": \"Brasil\"\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}company",
+							"host": [
+								"{{URL}}company"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Alteração Empresa (200)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Companhia atualizada com sucesso.\", function () {\r",
+									"    pm.expect(pm.globals.get(\"MsgAtualizadaSucessoRequerid\")).to.eql(JSON.parse(responseBody).msg );\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{tokenUsers}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"corporateName\": \"Doctor Linux\",\r\n  \"registerCompany\": \"12123456000198\",\r\n  \"mail\": \"test@test.com\",\r\n  \"matriz\": \"Teste\",\r\n  \"responsibleContact\": \"Marcio Santos\",\r\n  \"telephone\": \"99999999999999\",\r\n  \"serviceDescription\": \"Testes\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}company/67ab884fb94dd4b9b9a06d15",
+							"host": [
+								"{{URL}}company"
+							],
+							"path": [
+								"67ab884fb94dd4b9b9a06d15"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Alteração Empresa - Sem Token (403)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {\r",
+									"    pm.response.to.have.status(403);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check msg: Tokem obrigatório.\", function () {\r",
+									"    pm.expect(pm.globals.get(\"MsgTokemRequerid\")).to.eql(JSON.parse(responseBody).errors[0]);\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"corporateName\": \"Linux Doctor\",\r\n  \"registerCompany\": \"12123456000198\",\r\n  \"mail\": \"test@test.com\",\r\n  \"matriz\": \"Teste\",\r\n  \"responsibleContact\": \"Marcio Santos\",\r\n  \"telephone\": \"99999999999999\",\r\n  \"serviceDescription\": \"Testes\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://black-list.qacoders.dev.br/api/company/67ab884fb94dd4b9b9a06d15",
+							"protocol": "https",
+							"host": [
+								"black-list",
+								"qacoders",
+								"dev",
+								"br"
+							],
+							"path": [
+								"api",
+								"company",
+								"67ab884fb94dd4b9b9a06d15"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Alteração Empresa - Erro Servidor (500)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500\", function () {\r",
+									"    pm.response.to.have.status(500);\r",
+									"});\r",
+									" \r",
+									"pm.test(\"Erro Interno do Servidor\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Cast to ObjectId failed for value\");\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{tokenUsers}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"corporateName\": \"Linux Doctor\",\r\n  \"registerCompany\": \"12123456000198\",\r\n  \"mail\": \"test@test.com\",\r\n  \"matriz\": \"Teste\",\r\n  \"responsibleContact\": \"Marcio Santos\",\r\n  \"telephone\": \"99999999999999\",\r\n  \"serviceDescription\": \"Testes\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}company/125327",
+							"host": [
+								"{{URL}}company"
+							],
+							"path": [
+								"125327"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Alteração Empresa  - Nome em Branco (400)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check msg:O campo 'Nome da empresa' é obrigatório.\", function () {\r",
+									"    pm.expect(pm.globals.get(\"MsgNomeBrancoEmpresa\")).to.eql(JSON.parse(responseBody).error[0]);\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{tokenUsers}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"corporateName\": \"\",\r\n  \"registerCompany\": \"12123456000198\",\r\n  \"mail\": \"test@test.com\",\r\n  \"matriz\": \"Teste\",\r\n  \"responsibleContact\": \"Marcio Santos\",\r\n  \"telephone\": \"99999999999999\",\r\n  \"serviceDescription\": \"Testes\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}company/67ab884fb94dd4b9b9a06d15",
+							"host": [
+								"{{URL}}company"
+							],
+							"path": [
+								"67ab884fb94dd4b9b9a06d15"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Alteração Empresa  - Acima 100 Caracteres (400)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check msg:O campo 'Nome da empresa' deve ter no máximo 100 caracteres.\", function () {\r",
+									"    pm.expect(pm.globals.get(\"MsgNome100Caracteres\")).to.eql(JSON.parse(responseBody).error[0]);\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{tokenUsers}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"corporateName\": \"TecnoBrasil Soluções Integradas em Desenvolvimento Sustentável e Inovação para Transformação Digital Empresarial Ltda\",\r\n  \"registerCompany\": \"12123456000198\",\r\n  \"mail\": \"test@test.com\",\r\n  \"matriz\": \"Teste\",\r\n  \"responsibleContact\": \"Marcio Santos\",\r\n  \"telephone\": \"99999999999999\",\r\n  \"serviceDescription\": \"Testes\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}company/67ab884fb94dd4b9b9a06d15",
+							"host": [
+								"{{URL}}company"
+							],
+							"path": [
+								"67ab884fb94dd4b9b9a06d15"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Alteração Empresa  - CNPJ Campo Obrigatório (400)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check msg:O campo 'CNPJ' da empresa é obrigatório.\", function () {\r",
+									"    pm.expect(pm.globals.get(\"MsgCNPJObrigatório\")).to.eql(JSON.parse(responseBody).error[0]);\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{tokenUsers}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"corporateName\": \"Linux Doctor\",\r\n  \"registerCompany\": \"\",\r\n  \"mail\": \"test@test.com\",\r\n  \"matriz\": \"Teste\",\r\n  \"responsibleContact\": \"Marcio Santos\",\r\n  \"telephone\": \"99999999999999\",\r\n  \"serviceDescription\": \"Testes\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}company/67ab884fb94dd4b9b9a06d15",
+							"host": [
+								"{{URL}}company"
+							],
+							"path": [
+								"67ab884fb94dd4b9b9a06d15"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Alteração Empresa  - CNPJ Campo Somente Números (400)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check msg:O campo 'CNPJ' da empresa deve conter apenas números.\", function () {\r",
+									"    pm.expect(pm.globals.get(\"MsgCNPJApenasNumeros\")).to.eql(JSON.parse(responseBody).error[0]);\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{tokenUsers}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"corporateName\": \"Linux Doctor\",\r\n  \"registerCompany\": \"SHFGHSHWYFHKLI\",\r\n  \"mail\": \"test@test.com\",\r\n  \"matriz\": \"Teste\",\r\n  \"responsibleContact\": \"Marcio Santos\",\r\n  \"telephone\": \"99999999999999\",\r\n  \"serviceDescription\": \"Testes\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}company/67ab884fb94dd4b9b9a06d15",
+							"host": [
+								"{{URL}}company"
+							],
+							"path": [
+								"67ab884fb94dd4b9b9a06d15"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Alteração Empresa  - CNPJ Não Permitir Duplicidade (400)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check msg:não permitir duplicidade.\", function () {\r",
+									"    pm.expect(pm.globals.get(\"MsgNãoDuplicarCNPJ\")).to.eql(JSON.parse(responseBody).error[0]);\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{tokenUsers}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"corporateName\": \"Linux Doctor\",\r\n  \"registerCompany\": \"2254785963214522547859632145\",\r\n  \"mail\": \"test@test.com\",\r\n  \"matriz\": \"Teste\",\r\n  \"responsibleContact\": \"Marcio Santos\",\r\n  \"telephone\": \"99999999999999\",\r\n  \"serviceDescription\": \"Testes\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}company/67ab884fb94dd4b9b9a06d15",
+							"host": [
+								"{{URL}}company"
+							],
+							"path": [
+								"67ab884fb94dd4b9b9a06d15"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Alteração Empresa  - CNPJ Tem que Ter Mascara (400)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check msg:CNPJ Tem Que Ter Macara.\", function () {\r",
+									"    pm.expect(pm.globals.get(\"MsgTemQueTerMascara\")).to.eql(JSON.parse(responseBody).error[0]);\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{tokenUsers}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"corporateName\": \"Doctor Inf.\",\r\n  \"registerCompany\": \"(11.222.333/0001-44)\",\r\n  \"mail\": \"test@test.com\",\r\n  \"matriz\": \"Teste\",\r\n  \"responsibleContact\": \"Marcio Santos\",\r\n  \"telephone\": \"99999999999999\",\r\n  \"serviceDescription\": \"Testes\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}company/67ab884fb94dd4b9b9a06d15",
+							"host": [
+								"{{URL}}company"
+							],
+							"path": [
+								"67ab884fb94dd4b9b9a06d15"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Alteração Empresa  - Razão Social Campos Obrigatório (400)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check msg:RazãoSocialObrigatoria.\", function () {\r",
+									"    pm.expect(pm.globals.get(\"MsgObrigatoriaRazãoSocial\")).to.eql(JSON.parse(responseBody).error[0]);\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{tokenUsers}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"corporateName\": \".\",\r\n  \"registerCompany\": \"(11.222.333/0001-44)\",\r\n  \"mail\": \"test@test.com\",\r\n  \"matriz\": \"Teste\",\r\n  \"responsibleContact\": \"Marcio Santos\",\r\n  \"telephone\": \"99999999999999\",\r\n  \"serviceDescription\": \"Testes\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}company/67ab884fb94dd4b9b9a06d15",
+							"host": [
+								"{{URL}}company"
+							],
+							"path": [
+								"67ab884fb94dd4b9b9a06d15"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Alteração Empresa  - Razão Social Campos Alfanúmericos (400)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check msg:RazãoSocialCaracteresAlfanumérico.\", function () {\r",
+									"    pm.expect(pm.globals.get(\"MsgCaracteresAlfanumericoRazãoSocial\")).to.eql(JSON.parse(responseBody).error[0]);\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{tokenUsers}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"corporateName\": \"123311445899889545465456.\",\r\n  \"registerCompany\": \"(11222333000144)\",\r\n  \"mail\": \"test@test.com\",\r\n  \"matriz\": \"Teste\",\r\n  \"responsibleContact\": \"Marcio Santos\",\r\n  \"telephone\": \"99999999999999\",\r\n  \"serviceDescription\": \"Testes\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}company/67ab884fb94dd4b9b9a06d15",
+							"host": [
+								"{{URL}}company"
+							],
+							"path": [
+								"67ab884fb94dd4b9b9a06d15"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Alteração Empresa  - Contato Responsável Obrigatório (400)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check msg:Contado do Responsável é obrigatório.\", function () {\r",
+									"    pm.expect(pm.globals.get(\"MsgContadodoResposávelObrigatório\")).to.eql(JSON.parse(responseBody).error[0]);\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{tokenUsers}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"corporateName\": \"Linux Doctor\",\r\n  \"registerCompany\": \"12726456000155\",\r\n  \"mail\": \"test@test.com\",\r\n  \"matriz\": \"Teste\",\r\n  \"responsibleContact\": \"\",\r\n  \"telephone\": \"99999999999999\",\r\n  \"serviceDescription\": \"Testes\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}company/67ab884fb94dd4b9b9a06d15",
+							"host": [
+								"{{URL}}company"
+							],
+							"path": [
+								"67ab884fb94dd4b9b9a06d15"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Alteração Empresa  - Contato Responsável Dever Ter no Mínimo Duas Palavras Compostas",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check msg:Dever Ter no Mínimo Duas Palavras Compostas.\", function () {\r",
+									"    pm.expect(pm.globals.get(\"MsgMínimo Duas Palavras Compostas\")).to.eql(JSON.parse(responseBody).error [0] );\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{tokenUsers}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"corporateName\": \"Linux Doctor\",\r\n  \"registerCompany\": \"12726456000155\",\r\n  \"mail\": \"test@test.com\",\r\n  \"matriz\": \"Teste\",\r\n  \"responsibleContact\": \"Santos\",\r\n  \"telephone\": \"99999999999999\",\r\n  \"serviceDescription\": \"Testes\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}company/67ab884fb94dd4b9b9a06d15",
+							"host": [
+								"{{URL}}company"
+							],
+							"path": [
+								"67ab884fb94dd4b9b9a06d15"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Alteração Empresa  - Contato Responsável Somente Letras",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check msg:Contado do Responsável Somente Letras.\", function () {\r",
+									"    pm.expect(pm.globals.get(\"MsgContadodoResposávelLetrasSomente\")).to.eql(JSON.parse(responseBody).error[0] );\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{tokenUsers}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"corporateName\": \"Linux Doctor\",\r\n  \"registerCompany\": \"12726456000155\",\r\n  \"mail\": \"test@test.com\",\r\n  \"matriz\": \"Teste\",\r\n  \"responsibleContact\": \"2%%%%%¨&¨%$#$%¨¨\",\r\n  \"telephone\": \"99999999999999\",\r\n  \"serviceDescription\": \"Testes\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}company/67ab884fb94dd4b9b9a06d15",
+							"host": [
+								"{{URL}}company"
+							],
+							"path": [
+								"67ab884fb94dd4b9b9a06d15"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Alteração Empresa  - Contato Responsável 100 Caracteres (400)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check msg:Contato Responsável 100 Caracteres .\", function () {\r",
+									"    pm.expect(pm.globals.get(\"MsgContadodoResposavelAte100Caracteres\")).to.eql(JSON.parse(responseBody).error[0]);\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{tokenUsers}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"corporateName\": \"Linux Doctor\",\r\n  \"registerCompany\": \"12726456000155\",\r\n  \"mail\": \"test@test.com\",\r\n  \"matriz\": \"Teste\",\r\n  \"responsibleContact\": \"Maria José da Silva Santos Oliveira Costa Pereira Rodrigues Albuquerque Mendes Cavalcanti Ferreira Lima Nunes\",\r\n  \"telephone\": \"99999999999999\",\r\n  \"serviceDescription\": \"Testes\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}company/67ab884fb94dd4b9b9a06d15",
+							"host": [
+								"{{URL}}company"
+							],
+							"path": [
+								"67ab884fb94dd4b9b9a06d15"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Alteração Empresa  - Telefone  Campo Obrigatório  (400)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check msg:Telefone Campo Obrigatório.\", function () {\r",
+									"    pm.expect(pm.globals.get(\"MsgTelefoneObrigatorio\")).to.eql(JSON.parse(responseBody).error[0]);\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{tokenUsers}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"corporateName\": \"Linux Doctor\",\r\n  \"registerCompany\": \"12726456000155\",\r\n  \"mail\": \"test@test.com\",\r\n  \"matriz\": \"Teste\",\r\n  \"responsibleContact\": \"Ricardo Santos\",\r\n  \"telephone\": \"\",\r\n  \"serviceDescription\": \"Testes\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}company/67ab884fb94dd4b9b9a06d15",
+							"host": [
+								"{{URL}}company"
+							],
+							"path": [
+								"67ab884fb94dd4b9b9a06d15"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Alteração Empresa  - Telefone  Somente Número (400)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check msg:Telefone Somente Número.\", function () {\r",
+									"    pm.expect(pm.globals.get(\"MsgTelefoneSomenteNumero\")).to.eql(JSON.parse(responseBody).error[0]);\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{tokenUsers}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"corporateName\": \"Linux Doctor\",\r\n  \"registerCompany\": \"12726456000155\",\r\n  \"mail\": \"test@test.com\",\r\n  \"matriz\": \"Teste\",\r\n  \"responsibleContact\": \"Ricardo Santos\",\r\n  \"telephone\": \"dell@@@##$delll\",\r\n  \"serviceDescription\": \"Testes\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}company/67ab884fb94dd4b9b9a06d15",
+							"host": [
+								"{{URL}}company"
+							],
+							"path": [
+								"67ab884fb94dd4b9b9a06d15"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Alteração Empresa  - Telefone  Apenas Número Estrangeiro",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check msg:Somente Número Brasileiro.\", function () {\r",
+									"    pm.expect(pm.globals.get(\"MsgTelefoneSomenteNumeroEstrangeiro\")).to.eql(JSON.parse(responseBody).error[0]);\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{tokenUsers}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"corporateName\": \"Linux Info Doctor\",\r\n  \"registerCompany\": \"12727456000155\",\r\n  \"mail\": \"test@test.com\",\r\n  \"matriz\": \"Teste\",\r\n  \"responsibleContact\": \"Ricardo Santos\",\r\n  \"telephone\": \"351920123456\",\r\n  \"serviceDescription\": \"Testes\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}company/67ab884fb94dd4b9b9a06d15",
+							"host": [
+								"{{URL}}company"
+							],
+							"path": [
+								"67ab884fb94dd4b9b9a06d15"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Alteração Empresa - Telefone Deve Conte Mascara (MELHORIAS)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check msg:O campo 'Telefone' deve conter somente números.\", function () {\r",
+									"    pm.expect(pm.globals.get(\"MsgDeveConterSomenteNúmeros\")).to.eql(JSON.parse(responseBody).error[0]);\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{tokenUsers}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"corporateName\": \"Linux Info Doctor\",\r\n  \"registerCompany\": \"12727456000155\",\r\n  \"mail\": \"test@test.com\",\r\n  \"matriz\": \"Teste\",\r\n  \"responsibleContact\": \"Ricardo Santos\",\r\n  \"telephone\": \" (###)(###)(#####-####)\",\r\n  \"serviceDescription\": \"Testes\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}company/67ab884fb94dd4b9b9a06d15",
+							"host": [
+								"{{URL}}company"
+							],
+							"path": [
+								"67ab884fb94dd4b9b9a06d15"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Alteração Empresa  - Telefone  Máximo 15 Caracteres (Internacional Precisaria 20 Caracteres)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check msg:Telefone 15 Máximo Fora Precisa20 Caracteres.\", function () {\r",
+									"    pm.expect(pm.globals.get(\"MsgTelefoneMaximo15InterPrecisa20Caracteres\")).to.eql(JSON.parse(responseBody).error [0]);\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{tokenUsers}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"corporateName\": \"Linux Info Doctor\",\r\n  \"registerCompany\": \"12727456000155\",\r\n  \"mail\": \"test@test.com\",\r\n  \"matriz\": \"Teste\",\r\n  \"responsibleContact\": \"Ricardo Santos\",\r\n  \"telephone\": \"3256145785236547896321\",\r\n  \"serviceDescription\": \"Testes\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}company/67ab884fb94dd4b9b9a06d15",
+							"host": [
+								"{{URL}}company"
+							],
+							"path": [
+								"67ab884fb94dd4b9b9a06d15"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Alteração Empresa  - E-mail Campo Obrigatório (400)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check msg:O campo 'Email' é obrigatório.\", function () {\r",
+									"    pm.expect(pm.globals.get(\"CampoE-mailObrigatorio\")).to.eql(JSON.parse(responseBody).error [0]);\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{tokenUsers}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"corporateName\": \"Linux Info Doctor\",\r\n  \"registerCompany\": \"12727456000155\",\r\n  \"mail\": \"\",\r\n  \"matriz\": \"Teste\",\r\n  \"responsibleContact\": \"Ricardo Santos\",\r\n  \"telephone\": \"9999999999999\",\r\n  \"serviceDescription\": \"Testes\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}company/67ab884fb94dd4b9b9a06d15",
+							"host": [
+								"{{URL}}company"
+							],
+							"path": [
+								"67ab884fb94dd4b9b9a06d15"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Alteração Empresa  - E-mail Formato Dominio Valido (400)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check msg:E-mail Formato Dominio Valido.\", function () {\r",
+									"    pm.expect(pm.globals.get(\"DominioValidoE-mail\")).to.eql(JSON.parse(responseBody).error [0]);\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{tokenUsers}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"corporateName\": \"Linux Info Doctor\",\r\n  \"registerCompany\": \"12727456000155\",\r\n  \"mail\": \"(https://pt.wikipedia.org/wiki/Lista_de_TLDs\",\r\n  \"matriz\": \"Teste\",\r\n  \"responsibleContact\": \"Ricardo Santos\",\r\n  \"telephone\": \"9999999999999\",\r\n  \"serviceDescription\": \"Testes\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}company/67ab884fb94dd4b9b9a06d15",
+							"host": [
+								"{{URL}}company"
+							],
+							"path": [
+								"67ab884fb94dd4b9b9a06d15"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Alteração Empresa  - Descrição Informações Sobre Negócio - Campo Obrigatório (400)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check msg:O campo Descrição é obrigatório.\", function () {\r",
+									"    pm.expect(pm.globals.get(\"DescriminaçaoeObrigatoria\")).to.eql(JSON.parse(responseBody).error [0]);\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{tokenUsers}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"corporateName\": \"Linux Info Doctor\",\r\n  \"registerCompany\": \"12727456000155\",\r\n  \"mail\": \"test@test.com\",\r\n  \"matriz\": \"Teste\",\r\n  \"responsibleContact\": \"Ricardo Santos\",\r\n  \"telephone\": \"9999999999999\",\r\n  \"serviceDescription\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}company/67ab884fb94dd4b9b9a06d15",
+							"host": [
+								"{{URL}}company"
+							],
+							"path": [
+								"67ab884fb94dd4b9b9a06d15"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Testes de Exclusão",
+			"item": [
+				{
+					"name": "Lista Empresas (Feliz)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Converter a string JSON para um objeto JavaScript\r",
+									"var data = pm.response.json();\r",
+									" \r",
+									"// Gerar um número aleatório entre 0 e o comprimento da lista de objetos - 1\r",
+									"var randomIndex = Math.floor(Math.random() * data.length);\r",
+									" \r",
+									"// Obter o _id do objeto selecionado aleatoriamente\r",
+									"var companyrandomId = data[randomIndex]._id;\r",
+									" \r",
+									"// Armazenar o _id em uma variável de ambiente\r",
+									"pm.environment.set(\"CompanyrandomId\", companyrandomId);\r",
+									" \r",
+									"console.log(\"Company Random ID:\", companyrandomId);\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{tokenUsers}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}company",
+							"host": [
+								"{{URL}}company"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Exclusão Empresa (200)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check msg:Companhia deletado com sucesso.\", function () {\r",
+									"    pm.expect(pm.globals.get(\"DeletadaSucessoCompanhia\")).to.eql(JSON.parse(responseBody).msg );\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{tokenUsers}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}company/{{CompanyrandomId}}",
+							"host": [
+								"{{URL}}company"
+							],
+							"path": [
+								"{{CompanyrandomId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Exclusão de Empresa - Não Achada (404)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check msg:Essa companhia não existem em nossa base de dados.\", function () {\r",
+									"    pm.expect(pm.globals.get(\"EmpresaNaoAchadaExcluida\")).to.eql(JSON.parse(responseBody).msg );\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{tokenUsers}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}company/{{CompanyrandomId}}",
+							"host": [
+								"{{URL}}company"
+							],
+							"path": [
+								"{{CompanyrandomId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Exclusão de Empresa - Erro Interno Servidor (500)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500\", function () {\r",
+									"    pm.response.to.have.status(500);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{tokenUsers}}",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}company/896532",
+							"host": [
+								"{{URL}}company"
+							],
+							"path": [
+								"896532"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Exclusão de Empresa - Exclusão de Token (403)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {\r",
+									"    pm.response.to.have.status(403);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "in",
+									"value": "query",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "token",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}company/{{CompanyrandomId}}",
+							"host": [
+								"{{URL}}company"
+							],
+							"path": [
+								"{{CompanyrandomId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
